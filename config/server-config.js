@@ -1,6 +1,6 @@
 var thymolServerConfiguration = {
-  thymolNode: "${path-to-thymol-node.js}",
-  templateRoot: "${path-to-templates}",
+  thymolNode:  __dirname + "/../../thymol.js/dist/thymol-node.min.js",			// Points to the thymol-node library
+  templateRoot: __dirname + "/../../thymol.js/target/test-classes/templates",		// Path to templates root directory 
   templatePath : "",
   templateOffset: "",
   debug : true,
