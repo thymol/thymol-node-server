@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+var debug = require('debug')('thymol-server');
+
+var thymolEngine = require('../thymol-engine');
+thymolEngine.set('port', process.env.PORT || 3000);
+
+var server = thymolEngine.listen(thymolEngine.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
