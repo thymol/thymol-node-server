@@ -1,2 +1,29 @@
-# thymol-node-server
-A server-side Thymeleaf emulator built on Thymol and Express
+Thymol Node Server
+==================
+
+A server-side Thymeleaf emulator built on Thymol and Express.
+
+This is an experimental web server that processes server-side [Thymeleaf](http://www.thymeleaf.org) templates and [Thymol](http://www.thymoljs.org) JavaScript data files returning documents rendered as HTML.
+
+Pre-Requisites
+--------------
+
+You will need [nodejs](http://nodejs.org/download/).
+You also need a copy of the Thymol Node module. You can find the latest version [here](https://github.com/thymol/thymol.js/blob/2.x-master/dist/thymol-node.js).
+
+Installation
+------------
+
+Clone the project and "npm install" it (node comes with npm now).
+
+Configuration
+-------------
+
+The config files is in config/server-config.js. Change the value of "thymolNode" to point to your copy of thymol-node.js, and change "templateRoot" to the path to your template directory.
+<i>The default config file values assume that you have cloned the thymol.js project to the same project root directory as thymol-node-server.</i>
+
+Issues/Support
+--------------
+
+For bug reports/enhancement requests use the issues link on this [page](https://github.com/thymol/thymol-node-server/issues).
+For support or further information, please post a question on the [Thymol users forum](http://forum.thymoljs.org/).
