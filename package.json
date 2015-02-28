@@ -1,6 +1,6 @@
 {
   "name": "thymol-server",
-  "repository": "thymol/thymol-server",
+  "repository": "thymol/thymol-node-server",
   "version": "1.0.0-SNAPSHOT",
   "description": "A nodejs based server-side JavaScript Thymeleaf template engine",
   "private": true,
