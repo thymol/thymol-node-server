@@ -8,6 +8,8 @@ var templates = require( "./routes/templates" );
 var thymolEngine = express();
 
 var serverConfiguration = require( "./config/server-config" );
+thymolEngine.set( "host", serverConfiguration.host || "0.0.0.0" );
+thymolEngine.set( "port", serverConfiguration.port || 3000 );
 thymolEngine.set( "templateRoot", serverConfiguration.templateRoot );
 thymolEngine.set( "templatePath", serverConfiguration.templatePath );
 thymolEngine.set( "templateOffset", serverConfiguration.templateOffset );
