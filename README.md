@@ -19,7 +19,7 @@ Clone the project and "npm install" it (node comes with npm now).
 Configuration
 -------------
 
-The config files is in config/server-config.js. Change the value of "thymolNode" to point to your copy of thymol-node.js, and change "templateRoot" to the path to your template directory.
+There is a single configuration file config/server-config.js. Change the value of "thymolNode" to point to your copy of thymol-node.js, and change "templateRoot" to the path to your template directory.
 <i>The default config file values assume that you have cloned the thymol.js project as "thymol" in the same project root directory as thymol-node-server.</i>
 
 Execution
