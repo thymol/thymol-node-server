@@ -1,7 +1,7 @@
 Thymol Node Server
 ==================
 
-A server-side Thymeleaf emulator built on Thymol and Express.
+A nodejs based server-side JavaScript Thymeleaf template engine built on Thymol and Express.
 
 This is an experimental web server that processes server-side [Thymeleaf](http://www.thymeleaf.org) templates and [Thymol](http://www.thymoljs.org) JavaScript data files returning documents rendered as HTML.
 
