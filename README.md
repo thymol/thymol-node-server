@@ -9,7 +9,7 @@ Pre-Requisites
 --------------
 
 You will need [nodejs](http://nodejs.org/download/).
-You also need a copy of the Thymol Node module. You can find the latest version [here](https://github.com/thymol/thymol.js/blob/2.x-master/dist/thymol-node.js).
+You also need a copy of the Thymol Node module. You can find the latest version [here](https://github.com/thymol/thymol.js/blob/2.x-master/dist/).
 
 Installation
 ------------
