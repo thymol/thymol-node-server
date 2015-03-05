@@ -51,7 +51,7 @@ setDefaults = function() {
   thymol.thDefaultDisableMessages = serverConfiguration.defaults.disableMessages;
   thymol.thDefaultTemplateSuffix = serverConfiguration.defaults.templateSuffix;
 };
-require( serverConfiguration.thymolNode );
+require( "thymol-node" );
 thymol.thDomParser = function() {
 };
 thymol.thDomParser.prototype = {};

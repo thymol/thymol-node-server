@@ -8,19 +8,19 @@ This is an experimental web server that processes server-side [Thymeleaf](http:/
 Pre-Requisites
 --------------
 
-You will need [nodejs](http://nodejs.org/download/).
-You also need a copy of the Thymol Node module. You can find the latest version [here](https://github.com/thymol/thymol.js/blob/2.x-master/dist/thymol-node.js).
+You will need [nodejs](http://nodejs.org/download/) and npm (node comes with npm now).
+This project depends on the Thymol Node module see [npmjs](https://www.npmjs.com/package/thymol-node) and [github](https://github.com/thymol/thymol.js/blob/2.x-master/dist/thymol-node.js).
 
 Installation
 ------------
 
-Clone the project and "npm install" it (node comes with npm now).
+Simply "npm install" it.
 
 Configuration
 -------------
 
-There is a single configuration file config/server-config.js. Change the value of "thymolNode" to point to your copy of thymol-node.js, and change "templateRoot" to the path to your template directory.
-<i>The default config file values assume that you have cloned the thymol.js project as "thymol" in the same project root directory as thymol-node-server.</i>
+There is a single configuration file config/server-config.js. Change the value of "templateRoot" to the path to your template directory.
+<i>The default config file value assumes that you have cloned the thymol.js project as "thymol" in the same project root directory as thymol-node-server.</i>
 
 Execution
 ---------
