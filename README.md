@@ -14,7 +14,7 @@ This project depends on the Thymol Node module see [npmjs](https://www.npmjs.com
 Installation
 ------------
 
-Simply "npm install" it.
+Clone this project and "npm install" it.
 
 Configuration
 -------------
