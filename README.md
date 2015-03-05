@@ -9,7 +9,7 @@ Pre-Requisites
 --------------
 
 You will need [nodejs](http://nodejs.org/download/) and npm (node comes with npm now).
-This project depends on the Thymol Node module see [npmjs](https://www.npmjs.com/package/thymol-node) and [github](https://github.com/thymol/thymol.js/blob/2.x-master/dist/thymol-node.js).
+This project depends on the Thymol Node module see [npmjs](https://www.npmjs.com/package/thymol-node) and [github](https://github.com/thymol/thymol-node).
 
 Installation
 ------------
