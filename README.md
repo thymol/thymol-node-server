@@ -14,18 +14,41 @@ This project depends on the Thymol Node module see [npmjs](https://www.npmjs.com
 Installation
 ------------
 
-Clone this project and "npm install" it.
+Either "npm install thymol-node-server -g"
+Or clone this project and "npm install" it (locally).
 
 Configuration
 -------------
 
-There is a single configuration file config/server-config.js. Change the value of "templateRoot" to the path to your template directory.
-<i>The default config file value assumes that you have cloned the thymol.js project as "thymol" in the same project root directory as thymol-node-server.</i>
+There is a single configuration file config/server-config.js.
+You can set various control parameters using this file [(see)](http://www.thymoljs.org).
+Also, you can fine tune the jQuery configuration using the jQueryConfiguration initialiser (properties of this object are set on jQuery instances).
+
+For example using:
+<code>
+jQueryConfiguration: {
+    support: {
+      cors: true
+    }
+}
+</code>
+Will set the "support.cors" property of jQuery instances to "true" (you may need to do this if you're using jQuery 1.x.x).
 
 Execution
 ---------
+If you globally installed with npm all you need to do is:
 
-On *nix simply run bin/thymol-server as a shell script. On Windows run this file using the nodejs node command.
+   thymol <path-to-template-root>
+
+If you're using a git clone:
+
+Then on *nix simply run:
+
+   bin/thymol-server <path-to-template-root>
+
+On Windows run this file using the nodejs node command:
+
+   node bin/thymol-server <path-to-template-root>
 
 Issues/Support
 --------------
