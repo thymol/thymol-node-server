@@ -8,11 +8,12 @@ var templates = require( "./routes/templates" );
 var thymolEngine = express();
 
 var serverConfiguration = require( "./config/server-config" );
+
 thymolEngine.set( "host", serverConfiguration.host || "0.0.0.0" );
 thymolEngine.set( "port", serverConfiguration.port || 3000 );
+
 thymolEngine.set( "templateRoot", serverConfiguration.templateRoot );
 thymolEngine.set( "templatePath", serverConfiguration.templatePath );
-thymolEngine.set( "templateOffset", serverConfiguration.templateOffset );
 
 thymolEngine.use( logger( "dev" ) );
 thymolEngine.use( bodyParser.json() );
@@ -84,7 +85,6 @@ thymolEngine.engine( "html", function( filePath, options, callback ) { // define
   } )
 } );
 
-thymolEngine.set( "views", serverConfiguration.templateRoot + serverConfiguration.templatePath );
 thymolEngine.set( "view engine", "html" );
 
 // catch 404 and forward to error handler
@@ -171,25 +171,43 @@ var thymolProcess = function( content, options ) {
   thymol.thWindow = document.parentWindow;
 
   thymol.thWindow.location.search = "?";
+  thymol.thWindow.XMLHttpRequest = XMLHttpRequest;
 
   setDefaults();
 
   thymol.thProtocol = "";
 
-  thymol.thRoot = serverConfiguration.templateRoot;
-  var offset = thymolEngine.get( "templateOffset" );
-  thymol.thPath = serverConfiguration.templatePath + offset;
+  thymol.thRoot = thymolEngine.get( "templateRoot" );
+  thymol.thPath = thymolEngine.get( "templatePath" ) + options.offset;
 
   thymol.thUseAbsolutePath = true;
   thymol.thKeepRelative = true;
 
   $ = require( "jquery" )( thymol.thWindow );
 
+  if( !!serverConfiguration ) {
+    if( !!serverConfiguration.jQueryConfiguration ) {
+      for( var prop in serverConfiguration.jQueryConfiguration ) {
+        if( serverConfiguration.jQueryConfiguration.hasOwnProperty(prop)  ) {
+          if( $.hasOwnProperty(prop)  ) {
+            var sjcProp = serverConfiguration.jQueryConfiguration[prop];
+            for( var innerProp in sjcProp ) {
+              if( sjcProp.hasOwnProperty(innerProp)  ) {
+                if( $[prop].hasOwnProperty(innerProp)  ) {
+                  $[prop][innerProp] = sjcProp[innerProp];
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  thymol.jqSetup( $ );
+
   thymol.thTop = {
     name : new String()
   };
-
-  thymol.jqSetup( $ );
 
   thymol.thRequest = options.query;
 
