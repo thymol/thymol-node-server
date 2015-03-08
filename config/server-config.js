@@ -1,7 +1,7 @@
 var thymolServerConfiguration = {
   host: "localhost",                      // Server host defaults to 0.0.0.0
   port: 3000,                             // Server listening port defaults to 3000
-  templateRoot: __dirname + "/default",   // Path to templates root directory
+  templateRoot: __dirname + "/../default",   // Path to templates root directory
   templatePath : "",
   debug : true,
 /*  jQueryConfiguration: {                  // Properties to be copied to jQuery
