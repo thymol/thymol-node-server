@@ -14,37 +14,38 @@ This project depends on the Thymol Node module see [npmjs](https://www.npmjs.com
 Installation
 ------------
 
-Either "npm install thymol-node-server -g"
-Or clone this project and "npm install" it (locally).
+ Either "npm install thymol-node-server -g"
+ Or clone this project and "npm install" it (locally).
 
 Configuration
 -------------
 
-There is a single configuration file config/server-config.js.
-You can set various control parameters using this file [(see)](http://www.thymoljs.org).
-Also, you can fine tune the jQuery configuration using the jQueryConfiguration initialiser (properties of this object are set on jQuery instances).
+ There is a single configuration file config/server-config.js.
+ You can set various control parameters using this file [(see)](http://www.thymoljs.org).
+
+ Also, you can fine tune the jQuery configuration using the jQueryConfiguration initialiser (properties of this object are set on jQuery instances).
 
 For example using:
-<code>
+ <code>
 jQueryConfiguration: {
     support: {
       cors: true
     }
 }
 </code>
-Will set the "support.cors" property of jQuery instances to "true" (you may need to do this if you're using jQuery 1.x.x).
+ Will set the "support.cors" property of jQuery instances to "true" (you may need to do this if you're using jQuery 1.x.x).
 
 Execution
 ---------
-If you globally installed with npm all you need to do is:
+ If you globally installed with npm all you need to do is:
 
    thymol <path-to-template-root>
 
-If you're using a git clone:
+ If you're using a git clone:
 
-Then on *nix simply run:
+   Then on *nix simply run:
 
-   bin/thymol-server <path-to-template-root>
+     bin/thymol-server <path-to-template-root>
 
 On Windows run this file using the nodejs node command:
 
@@ -53,5 +54,5 @@ On Windows run this file using the nodejs node command:
 Issues/Support
 --------------
 
-For bug reports/enhancement requests use the issues link on this [page](https://github.com/thymol/thymol-node-server/issues).
-For support or further information, please post a question on the [Thymol users forum](http://forum.thymoljs.org/).
+ For bug reports/enhancement requests use the issues link on this [page](https://github.com/thymol/thymol-node-server/issues).
+ For support or further information, please post a question on the [Thymol users forum](http://forum.thymoljs.org/).
