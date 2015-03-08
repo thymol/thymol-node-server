@@ -23,13 +23,14 @@ router.get( '*', function( req, res ) {
       if( !!stats && stats.isFile() ) {
         var path = url.substring( 1 );
         var lio = url.lastIndexOf( "/" );
+        var offset = "";
         if( lio > 0 ) {
-          var offset = url.substring( 0, lio );
-          req.app.set( "templateOffset", offset );
+          offset = url.substring( 0, lio );
         }
         var options = {};
         options.query = query;
         options.uri = tf;
+        options.offset = offset;
         res.render( path, options );
         return;
       }
