@@ -15,7 +15,8 @@ Installation
 ------------
 
  Either "npm install thymol-node-server -g"
- Or clone this project and "npm install" it (locally).
+
+ Or clone the project from [github](https://github.com/thymol/thymol-node-server) and "npm install" it (locally).
 
 Configuration
 -------------
@@ -39,7 +40,7 @@ Execution
 ---------
  If you globally installed with npm all you need to do is:
 
-   thymol <path-to-template-root>
+    thymol <path-to-template-root>
 
  If you're using a git clone:
 
@@ -49,7 +50,7 @@ Execution
 
 On Windows run this file using the nodejs node command:
 
-   node bin/thymol-server <path-to-template-root>
+    node bin/thymol-server <path-to-template-root>
 
 Issues/Support
 --------------
