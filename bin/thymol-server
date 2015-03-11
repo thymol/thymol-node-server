@@ -1,15 +1,7 @@
 #!/usr/bin/env node
 var debug = require('debug')('thymol-server');
 var thymolEngine = require('../thymol-engine');
-if( process.argv.length > 2) {
-  thymolEngine.set( "templateRoot", process.argv[2] );
-  console.log("template root is: " + process.argv[2] );
-}
-if( process.argv.length > 3) {
-  thymolEngine.set( "templatePath", process.argv[3] );
-  console.log("template path is: " + process.argv[3] );
-}
-thymolEngine.set( "views", thymolEngine.get("templateRoot") + thymolEngine.get("templatePath") );
-var server = thymolEngine.listen(thymolEngine.get('port'), thymolEngine.get('host'), function() {
+var config = thymolEngine.get( "config" );
+var server = thymolEngine.listen( config.port, config.host, function() {
   debug('Thymol node server listening on port ' + server.address().port);
 });
