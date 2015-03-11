@@ -3,19 +3,18 @@ var router = express.Router();
 var fs = require( 'fs' );
 
 /* GET a template or forward request to next route. */
-router.get( '*', function( req, res ) {
+router.get( '*', function( req, res, next ) {
   var l = req.originalUrl.length;
   if( l > 1 ) {
     try {
-      var templateRoot = req.app.get( "templateRoot" );
-      var templatePath = req.app.get( "templatePath" );
+      var config = req.app.get( "config" );
       var query = null;
       var splits = req.originalUrl.split( "?" );
       var url = splits[ 0 ];
       if( url.lastIndexOf( ".html" ) !== url.length - 5 ) {
         url = splits[ 0 ] + ".html";
       }
-      var tf = templateRoot + templatePath + url;
+      var tf = config.templateRoot + config.templatePath + url;
       if( splits.length > 1 ) {
         query = "?" + splits[ 1 ];
       }
