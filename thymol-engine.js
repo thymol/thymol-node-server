@@ -9,11 +9,20 @@ var thymolEngine = express();
 
 var serverConfiguration = require( "./config/server-config" );
 
-thymolEngine.set( "host", serverConfiguration.host || "0.0.0.0" );
-thymolEngine.set( "port", serverConfiguration.port || 3000 );
+if( process.argv.length > 2) {
+  serverConfiguration.templateRoot = process.argv[2];
+}
+if( process.argv.length > 3) {
+  serverConfiguration.templatePath = process.argv[3];
+}
 
-thymolEngine.set( "templateRoot", serverConfiguration.templateRoot );
-thymolEngine.set( "templatePath", serverConfiguration.templatePath );
+serverConfiguration.host = serverConfiguration.host || "0.0.0.0";
+serverConfiguration.port = serverConfiguration.port || 3000;
+
+thymolEngine.set( "config", serverConfiguration );
+
+console.log("template root is: " + serverConfiguration.templateRoot );
+console.log("template path is: " + serverConfiguration.templatePath );
 
 thymolEngine.use( logger( "dev" ) );
 thymolEngine.use( bodyParser.json() );
@@ -21,8 +30,10 @@ thymolEngine.use( bodyParser.urlencoded( {
   extended : false
 } ) );
 thymolEngine.use( cookieParser() );
-
 thymolEngine.use( templates );
+thymolEngine.use(express.static( serverConfiguration.templateRoot ));
+
+thymolEngine.set( "views", [serverConfiguration.templateRoot + serverConfiguration.templatePath, __dirname + "/default" ] );
 
 var fs = require( "fs" );
 
@@ -102,10 +113,15 @@ if( thymolEngine.get( "env" ) === "development" ) {
   thymolEngine.use( function( err, req, res, next ) {
     if( notFavicon( req, res ) ) {
       res.status( err.status || 500 );
-      res.render( "error", {
-        message : err.message,
-        error : err
-      } );
+      try {
+        res.render( "error", {
+          message : err.message,
+          error : err
+        } );
+      }
+      catch(drnderr) {
+        debug("drnderr is:" + drnderr);
+      }
     }
   } );
 }
@@ -115,10 +131,15 @@ if( thymolEngine.get( "env" ) === "development" ) {
 thymolEngine.use( function( err, req, res, next ) {
   if( notFavicon( req, res ) ) {
     res.status( err.status || 500 );
-    res.render( "error", {
-      message : err.message,
-      error : {}
-    } );
+    try {
+      res.render( "error", {
+        message : err.message,
+        error : {}
+      } );
+    }
+    catch(rnderr) {
+      debug("rnderr is:" + rnderr);
+    }
   }
 } );
 
@@ -177,8 +198,8 @@ var thymolProcess = function( content, options ) {
 
   thymol.thProtocol = "";
 
-  thymol.thRoot = thymolEngine.get( "templateRoot" );
-  thymol.thPath = thymolEngine.get( "templatePath" ) + options.offset;
+  thymol.thRoot = serverConfiguration.templateRoot;
+  thymol.thPath = serverConfiguration.templatePath + options.offset;
 
   thymol.thUseAbsolutePath = true;
   thymol.thKeepRelative = true;
@@ -223,7 +244,7 @@ var thymolProcess = function( content, options ) {
   thymol.thWindow.alert = alertObject.alert;
 
   if( !!options.error ) {
-    thVars = [ [ "errorMessage", options.error ] ];
+    thVars = [ [ "errorMessage", options.error.status + " " + options.error.message ] ];
   }
 
   var resultDocument = thymol.execute( thymol.thDocument );
