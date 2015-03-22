@@ -8,21 +8,27 @@ var templates = require( "./routes/templates" );
 var thymolEngine = express();
 
 var serverConfiguration = require( "./config/server-config" );
+var thymolNodePath = "thymol-node";
 
 if( process.argv.length > 2) {
-  serverConfiguration.templateRoot = process.argv[2];
+  serverConfiguration.webappRoot = process.argv[2];
 }
 if( process.argv.length > 3) {
   serverConfiguration.templatePath = process.argv[3];
+}
+console.log("template root is: " + serverConfiguration.webappRoot );
+console.log("template path is: " + serverConfiguration.templatePath );
+if( process.argv.length > 4) {
+  if( !!process.argv[4] && process.argv[4].length > 0 ) {
+    thymolNodePath = process.argv[4];
+    console.log("thymol-node path is: " + thymolNodePath );
+  }
 }
 
 serverConfiguration.host = serverConfiguration.host || "0.0.0.0";
 serverConfiguration.port = serverConfiguration.port || 3000;
 
 thymolEngine.set( "config", serverConfiguration );
-
-console.log("template root is: " + serverConfiguration.templateRoot );
-console.log("template path is: " + serverConfiguration.templatePath );
 
 thymolEngine.use( logger( "dev" ) );
 thymolEngine.use( bodyParser.json() );
@@ -31,9 +37,9 @@ thymolEngine.use( bodyParser.urlencoded( {
 } ) );
 thymolEngine.use( cookieParser() );
 thymolEngine.use( templates );
-thymolEngine.use(express.static( serverConfiguration.templateRoot ));
+thymolEngine.use(express.static( serverConfiguration.webappRoot ));
 
-thymolEngine.set( "views", [serverConfiguration.templateRoot + serverConfiguration.templatePath, __dirname + "/default" ] );
+thymolEngine.set( "views", [serverConfiguration.webappRoot + serverConfiguration.templatePath, __dirname + "/default" ] );
 
 var fs = require( "fs" );
 
@@ -48,6 +54,7 @@ require( "./lib/XHR");
 thymol = {};
 
 setDefaults = function() {
+  thymol.thScriptPath = "";
   thymol.thDebug = serverConfiguration.debug;
   thymol.thDefaultPrefix = serverConfiguration.defaults.prefix;
   thymol.thDefaultDataPrefix = serverConfiguration.defaults.dataPrefix;
@@ -56,6 +63,7 @@ setDefaults = function() {
   thymol.thDefaultLocale = serverConfiguration.defaults.locale;
   thymol.thDefaultPrecedence = serverConfiguration.defaults.precedence;
   thymol.thDefaultMessagePath = serverConfiguration.defaults.messagePath;
+  thymol.thDefaultResourcePath = serverConfiguration.defaults.resourcePath;
   thymol.thDefaultMessagesBaseName = serverConfiguration.defaults.messagesBaseName;
   thymol.thDefaultRelativeRootPath = serverConfiguration.defaults.relativeRootPath;
   thymol.thDefaultExtendedMapping = serverConfiguration.defaults.extendedMapping;
@@ -63,7 +71,7 @@ setDefaults = function() {
   thymol.thDefaultDisableMessages = serverConfiguration.defaults.disableMessages;
   thymol.thDefaultTemplateSuffix = serverConfiguration.defaults.templateSuffix;
 };
-require( "thymol-node" );
+require( thymolNodePath );
 thymol.thDomParser = function() {
 };
 thymol.thDomParser.prototype = {};
@@ -162,6 +170,7 @@ var thymolProcess = function( content, options ) {
   thLocale = undefined;
   thPrecedence = undefined;
   thMessagePath = undefined;
+  thResourcePath = undefined;
   thMessagesBaseName = undefined;
   thRelativeRootPath = undefined;
   thExtendedMapping = undefined;
@@ -198,11 +207,11 @@ var thymolProcess = function( content, options ) {
 
   thymol.thProtocol = "";
 
-  thymol.thRoot = serverConfiguration.templateRoot;
+  thymol.thRoot = serverConfiguration.webappRoot;
   thymol.thPath = serverConfiguration.templatePath + options.offset;
 
   thymol.thUseAbsolutePath = true;
-  thymol.thKeepRelative = true;
+  thymol.thUseFullURLPath = false;
 
   $ = require( "jquery" )( thymol.thWindow );
 
@@ -244,7 +253,7 @@ var thymolProcess = function( content, options ) {
   thymol.thWindow.alert = alertObject.alert;
 
   if( !!options.error ) {
-    thVars = [ [ "errorMessage", options.error.status + " " + options.error.message ] ];
+    thVars = [ [ "errorMessage", (!!options.error.status ? (options.error.status + " "): "" )  + (!!options.error.name ? (options.error.name + ": "): "" ) + (!!options.error.message ? options.error.message: options.error ) ] ];
   }
 
   var resultDocument = thymol.execute( thymol.thDocument );
