@@ -14,7 +14,7 @@ router.get( '*', function( req, res, next ) {
       if( url.lastIndexOf( ".html" ) !== url.length - 5 ) {
         url = splits[ 0 ] + ".html";
       }
-      var tf = config.templateRoot + config.templatePath + url;
+      var tf = config.webappRoot + config.templatePath + url;
       if( splits.length > 1 ) {
         query = "?" + splits[ 1 ];
       }
