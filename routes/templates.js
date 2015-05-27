@@ -4,6 +4,9 @@ var fs = require( 'fs' );
 
 /* GET a template or forward request to next route. */
 router.get( '*', function( req, res, next ) {
+   if( !!res.locals.requestContext ) {
+    thymol.requestContext = res.locals.requestContext;
+  }
   var l = req.originalUrl.length;
   if( l > 1 ) {
     try {
