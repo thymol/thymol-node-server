@@ -7,20 +7,26 @@ var bodyParser = require( "body-parser" );
 var templates = require( "./routes/templates" );
 var thymolEngine = express();
 
-var serverConfiguration = require( "./config/server-config" );
 var thymolNodePath = "thymol-node";
 
-if( process.argv.length > 2) {
-  serverConfiguration.webappRoot = process.argv[2];
+var argv = require('yargs').argv;
+
+var serverConfiguration = require( "./config/server-config" );
+if( !!argv.c ) {
+  serverConfiguration = require( argv.c );
 }
-if( process.argv.length > 3) {
-  serverConfiguration.templatePath = process.argv[3];
+
+if( argv._.length > 0) {
+  serverConfiguration.webappRoot = argv._[0];
+}
+if( argv._.length > 1) {
+  serverConfiguration.templatePath = argv._[1];
 }
 console.log("template root is: " + serverConfiguration.webappRoot );
 console.log("template path is: " + serverConfiguration.templatePath );
-if( process.argv.length > 4) {
-  if( !!process.argv[4] && process.argv[4].length > 0 ) {
-    thymolNodePath = process.argv[4];
+if( argv._.length > 2) {
+  if( !!argv._[2] && argv._[2].length > 0 ) {
+    thymolNodePath = argv._[2];
     console.log("thymol-node path is: " + thymolNodePath );
   }
 }
@@ -36,10 +42,6 @@ thymolEngine.use( bodyParser.urlencoded( {
   extended : false
 } ) );
 thymolEngine.use( cookieParser() );
-thymolEngine.use( templates );
-thymolEngine.use(express.static( serverConfiguration.webappRoot ));
-
-thymolEngine.set( "views", [serverConfiguration.webappRoot + serverConfiguration.templatePath, __dirname + "/default" ] );
 
 var fs = require( "fs" );
 
@@ -71,7 +73,58 @@ setDefaults = function() {
   thymol.thDefaultDisableMessages = serverConfiguration.defaults.disableMessages;
   thymol.thDefaultTemplateSuffix = serverConfiguration.defaults.templateSuffix;
 };
+
+resetGlobals = function() {
+  thPrefix = undefined;
+  thDataPrefix = undefined;
+  thAllowNullText = undefined;
+  thPrecision = undefined;
+  thProtocol = undefined;
+  thLocale = undefined;
+  thPrecedence = undefined;
+  thMessagePath = undefined;
+  thResourcePath = undefined;
+  thMessagesBaseName = undefined;
+  thRelativeRootPath = undefined;
+  thExtendedMapping = undefined;
+  thLocalMessages = undefined;
+  thDisableMessages = undefined;
+  thTemplateSuffix = undefined;
+
+  thRoot = undefined;
+  thPath = undefined;
+  thVars = undefined;
+  thMessages = undefined;
+  thMappings = undefined;
+  thDisable = undefined;
+};
+
+loadJQuery = function() {
+  $ = require( "jquery" )( thymol.thWindow );
+  if( !!serverConfiguration ) {
+    if( !!serverConfiguration.jQueryConfiguration ) {
+      for( var prop in serverConfiguration.jQueryConfiguration ) {
+        if( serverConfiguration.jQueryConfiguration.hasOwnProperty(prop)  ) {
+          if( $.hasOwnProperty(prop)  ) {
+            var sjcProp = serverConfiguration.jQueryConfiguration[prop];
+            for( var innerProp in sjcProp ) {
+              if( sjcProp.hasOwnProperty(innerProp)  ) {
+                if( $[prop].hasOwnProperty(innerProp)  ) {
+                  $[prop][innerProp] = sjcProp[innerProp];
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 require( thymolNodePath );
+thymol.express = express;
+thymol.engine = thymolEngine;
+thymol.require = require;
 thymol.thDomParser = function() {
 };
 thymol.thDomParser.prototype = {};
@@ -92,6 +145,38 @@ thymol.ready = function( func ) {
   }
   thymolDeferredFunctions.push( func );
 };
+
+resetGlobals();
+setDefaults();
+
+var jsdomOptions = {
+  features : {
+    FetchExternalResources : false,
+    ProcessExternalResources : false
+  }
+};
+
+var doc = jsdom("<html></html>", jsdomOptions);
+thymol.thWindow = doc.defaultView;
+loadJQuery();
+thymol.jqSetup( $ );
+thymol.setup( serverConfiguration.resetPerRequest );
+
+thymol.thProtocol = "";
+
+thymol.thRoot = serverConfiguration.webappRoot;
+
+thymol.thUseAbsolutePath = true;
+thymol.thUseFullURLPath = false;
+
+if( !!argv.w ) {
+  require( argv.w )(thymolEngine,express);
+}
+
+thymolEngine.use( templates );
+thymolEngine.use(express.static( serverConfiguration.webappRoot ));
+
+thymolEngine.set( "views", [serverConfiguration.webappRoot + serverConfiguration.templatePath, __dirname + "/default" ] );
 
 thymolEngine.engine( "html", function( filePath, options, callback ) { // define the template engine
   fs.readFile( filePath, function( err, content ) {
@@ -162,38 +247,7 @@ var notFavicon = function( req, res ) {
 
 var thymolProcess = function( content, options ) {
 
-  thPrefix = undefined;
-  thDataPrefix = undefined;
-  thAllowNullText = undefined;
-  thPrecision = undefined;
-  thProtocol = undefined;
-  thLocale = undefined;
-  thPrecedence = undefined;
-  thMessagePath = undefined;
-  thResourcePath = undefined;
-  thMessagesBaseName = undefined;
-  thRelativeRootPath = undefined;
-  thExtendedMapping = undefined;
-  thLocalMessages = undefined;
-  thDisableMessages = undefined;
-  thTemplateSuffix = undefined;
-
-  thRoot = undefined;
-  thPath = undefined;
-  thVars = undefined;
-  thMessages = undefined;
-  thMappings = undefined;
-  thDisable = undefined;
-
-  var templateURL = "file://" + options.uri;
-
-  var jsdomOptions = {
-    features : {
-      FetchExternalResources : false,
-      ProcessExternalResources : false
-    },
-    url : templateURL
-  };
+  jsdomOptions.url = "file://" + options.uri;
 
   var document = jsdom( content, jsdomOptions );
 
@@ -205,35 +259,13 @@ var thymolProcess = function( content, options ) {
 
   setDefaults();
 
-  thymol.thProtocol = "";
-
-  thymol.thRoot = serverConfiguration.webappRoot;
   thymol.thPath = serverConfiguration.templatePath + options.offset;
 
-  thymol.thUseAbsolutePath = true;
-  thymol.thUseFullURLPath = false;
+  thymol.thDataThymolLoading = serverConfiguration.dataThymolLoading || false;
 
-  $ = require( "jquery" )( thymol.thWindow );
-
-  if( !!serverConfiguration ) {
-    if( !!serverConfiguration.jQueryConfiguration ) {
-      for( var prop in serverConfiguration.jQueryConfiguration ) {
-        if( serverConfiguration.jQueryConfiguration.hasOwnProperty(prop)  ) {
-          if( $.hasOwnProperty(prop)  ) {
-            var sjcProp = serverConfiguration.jQueryConfiguration[prop];
-            for( var innerProp in sjcProp ) {
-              if( sjcProp.hasOwnProperty(innerProp)  ) {
-                if( $[prop].hasOwnProperty(innerProp)  ) {
-                  $[prop][innerProp] = sjcProp[innerProp];
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  loadJQuery();
   thymol.jqSetup( $ );
+
 
   thymol.thTop = {
     name : new String()
@@ -251,6 +283,11 @@ var thymolProcess = function( content, options ) {
   };
 
   thymol.thWindow.alert = alertObject.alert;
+
+  if( !!serverConfiguration.resetPerRequest ) {
+    resetGlobals();
+    thymol.reset();
+  }
 
   if( !!options.error ) {
     thVars = [ [ "errorMessage", (!!options.error.status ? (options.error.status + " "): "" )  + (!!options.error.name ? (options.error.name + ": "): "" ) + (!!options.error.message ? options.error.message: options.error ) ] ];
