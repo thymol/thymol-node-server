@@ -1,6 +1,6 @@
 {
   "name": "thymol-node-server",
-  "version": "1.0.0-pre.5",
+  "version": "1.0.0-pre.7",
   "description": "A nodejs based server-side JavaScript Thymeleaf template engine built on Thymol and Express",
   "main": "thymol-engine.js",
   "dependencies": {
