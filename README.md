@@ -49,22 +49,22 @@ Execution
 Configuration
 -------------
 
- Thymol Node Server is configured using a simple JavaScript file. A standard configuration file is supplied in the default installation at "config/server-config.js".
+ Thymol Node Server is configured using a simple JavaScript file. The default configuration file is loaded from "config/server-config.js".
  
- To apply specific configuration changes you may edit this file or nominate an alternative configuration file using the "-c <path-to-config-file>" option on the server start-up command line.
+ You can edit this file or nominate an alternative using the "-c <path-to-config-file>" option on the server start-up command line.
   
- You can set the values of Thymol control parameters using this file [(see)](http://www.thymoljs.org/documents/configuration.html?docu) or you can set various server control parameters (server host name, port etc).
+ You can use the configuration file to set the values of Thymol control parameters [(see)](http://www.thymoljs.org/documents/configuration.html?docu). The configuration file can also be used to set web server control parameters (server host name, port etc).
 
- Fixed values for webapp root and template path can be specified in the configuration file so that they need not be set on the command line.
+ For example, the values for webapp root and template path can be specified in the configuration file so that they don't have to be specified on the command line.
   
- Thymol Node Server specific control parameters that may be used are:
+ The are two control parameters specific to Thymol Node Server. They are:
   
     dataThymolLoading: this is a boolean control, if set to "true", the server will load and execute any JavaScript files that are specified in "data-thymol-load" attributes of <script> tags in templates as they are processed.
                        The value of this control defaults to "false", so "data-thymol-load" scripts are ignored by default.
      
     resetPerRequest: this is a boolean control, if set to "true", the server will reset all internal configuration on receipt of every new request. (This is used by Thymol automated integration tests). 
 
- You can fine tune the jQuery configuration using the jQueryConfiguration initialiser (properties of this object are set on jQuery instances).
+ You can also use the configuration file to "fine tune" the jQuery configuration using the jQueryConfiguration initialiser (properties of this object are set on jQuery instances).
 
 For example using:
 
