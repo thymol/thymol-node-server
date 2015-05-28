@@ -3,7 +3,7 @@ Thymol Node Server
 
 A nodejs based server-side JavaScript Thymeleaf template engine built on Thymol and Express.
 
-This is an experimental web server that processes server-side [Thymeleaf](http://www.thymeleaf.org) templates and [Thymol](http://www.thymoljs.org) JavaScript data files returning documents rendered as HTML.
+This is an experimental web server that processes server-side [Thymeleaf](http://www.thymeleaf.org) templates, JavaScript and data using [Thymol](http://www.thymoljs.org) and returns documents rendered as HTML.
 
 Pre-Requisites
 --------------
@@ -100,7 +100,7 @@ b). Clone the [Thymol petclinic example project](https://github.com/thymol/thymo
 
     thymol -w <installation-path>/src/main/webapp/resources/thymol/petclinic.js  <installation-path>/src/main/webapp /WEB-INF/thymeleaf
   
- Where <installation-path> is the fully qualified path to the project installation directory (including "thymol.thymeleafexamples-petclinic"). 
+ Where &lt;installation-path&gt; is the fully qualified path to the project installation directory (including "thymol.thymeleafexamples-petclinic"). 
  
  Once the server has started, browse to http://localhost:3000/welcome - you should see the well known petclinic home page.
  
