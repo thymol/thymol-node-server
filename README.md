@@ -57,7 +57,7 @@ Configuration
 
  For example, the values for webapp root and template path can be specified in the configuration file so that they don't have to be specified on the command line.
   
- The are two control parameters specific to Thymol Node Server. They are:
+ There are two control parameters specific to Thymol Node Server:
   
     dataThymolLoading: this is a boolean control, if set to "true", the server will load and execute any JavaScript files that are specified in "data-thymol-load" attributes of <script> tags in templates as they are processed.
                        The value of this control defaults to "false", so "data-thymol-load" scripts are ignored by default.
