@@ -48,9 +48,6 @@ var fs = require( "fs" );
 var jsdl = require( "jsdom" );
 var jsdom = jsdl.jsdom;
 
-//var xhreq = require( "xmlhttprequest" );
-//XMLHttpRequest = xhreq.XMLHttpRequest;
-
 require( "./lib/XHR");
 
 thymol = {};
@@ -252,7 +249,13 @@ var thymolProcess = function( content, options ) {
   var document = jsdom( content, jsdomOptions );
 
   thymol.thDocument = document;
-  thymol.thWindow = document.parentWindow;
+
+  if( document.parentWindow ) {
+    thymol.thWindow = document.parentWindow;
+  }
+  else if( document.defaultView ) {
+    thymol.thWindow = document.defaultView;
+  }
 
   thymol.thWindow.location.search = "?";
   thymol.thWindow.XMLHttpRequest = XMLHttpRequest;
