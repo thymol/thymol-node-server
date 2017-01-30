@@ -45,12 +45,20 @@ thymolEngine.use( cookieParser() );
 
 var fs = require( "fs" );
 
-var jsdl = require( "jsdom" );
-var jsdom = jsdl.jsdom;
-
 require( "./lib/XHR");
 
 thymol = {};
+
+var domino = require( "domino" );
+var Location = require('domino/lib/Location');
+thymol.thDomParse = function(markup,junk,uri) {
+  var wndw = domino.createWindow(markup);
+  if( !!uri ) {
+    var loc = new Location(wndw, "file://" + uri);
+    wndw.location = loc;
+  }
+  return wndw.document;
+};
 
 setDefaults = function() {
   thymol.thScriptPath = "";
@@ -96,45 +104,10 @@ resetGlobals = function() {
   thDisable = undefined;
 };
 
-loadJQuery = function() {
-  $ = require( "jquery" )( thymol.thWindow );
-  if( !!serverConfiguration ) {
-    if( !!serverConfiguration.jQueryConfiguration ) {
-      for( var prop in serverConfiguration.jQueryConfiguration ) {
-        if( serverConfiguration.jQueryConfiguration.hasOwnProperty(prop)  ) {
-          if( $.hasOwnProperty(prop)  ) {
-            var sjcProp = serverConfiguration.jQueryConfiguration[prop];
-            for( var innerProp in sjcProp ) {
-              if( sjcProp.hasOwnProperty(innerProp)  ) {
-                if( $[prop].hasOwnProperty(innerProp)  ) {
-                  $[prop][innerProp] = sjcProp[innerProp];
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 require( thymolNodePath );
 thymol.express = express;
 thymol.engine = thymolEngine;
 thymol.require = require;
-thymol.thDomParser = function() {
-};
-thymol.thDomParser.prototype = {};
-thymol.thDomParser.prototype.constructor = thymol.thDomParser;
-thymol.thDomParser.prototype.parseFromString = function( markup, type ) {
-  var jsdomOptions = {
-    features : {
-      FetchExternalResources : false,
-      ProcessExternalResources : false
-    }
-  };
-  return jsdom( markup, jsdomOptions );
-};
 
 thymol.ready = function( func ) {
   if( typeof thymolDeferredFunctions === "undefined" || thymolDeferredFunctions === null ) {
@@ -146,17 +119,9 @@ thymol.ready = function( func ) {
 resetGlobals();
 setDefaults();
 
-var jsdomOptions = {
-  features : {
-    FetchExternalResources : false,
-    ProcessExternalResources : false
-  }
-};
-
-var doc = jsdom("<html></html>", jsdomOptions);
+var doc = thymol.thDomParse("<html></html>");
 thymol.thWindow = doc.defaultView;
-loadJQuery();
-thymol.jqSetup( $ );
+
 thymol.setup( serverConfiguration.resetPerRequest );
 
 thymol.thProtocol = "";
@@ -244,9 +209,7 @@ var notFavicon = function( req, res ) {
 
 var thymolProcess = function( content, options ) {
 
-  jsdomOptions.url = "file://" + options.uri;
-
-  var document = jsdom( content, jsdomOptions );
+  var document = thymol.thDomParse( content, null, options.uri );
 
   thymol.thDocument = document;
 
@@ -265,10 +228,6 @@ var thymolProcess = function( content, options ) {
   thymol.thPath = serverConfiguration.templatePath + options.offset;
 
   thymol.thDataThymolLoading = serverConfiguration.dataThymolLoading || false;
-
-  loadJQuery();
-  thymol.jqSetup( $ );
-
 
   thymol.thTop = {
     name : new String()
@@ -297,10 +256,7 @@ var thymolProcess = function( content, options ) {
   }
 
   var resultDocument = thymol.execute( thymol.thDocument );
-
-  var serialiser = jsdl.serializeDocument;
-
-  result.rendered = serialiser( resultDocument );
+  result.rendered = resultDocument.outerHTML;
 
   return result;
 };
