@@ -4,13 +4,8 @@ var thymolServerConfiguration = {
   webappRoot: __dirname + "/../default",   // Path to templates root directory
   templatePath : "",
   debug : true,
-//  dataThymolLoading: true,
-//  resetPerRequest: true,
-/*  jQueryConfiguration: {                  // Properties to be copied to jQuery
-    support: {
-      cors: true                          // Required if you need to use jquery@1*
-    }
-  },*/
+  dataThymolLoading: true,
+  resetPerRequest: true,
   defaults: {
     prefix : "th",
     dataPrefix : "data",
