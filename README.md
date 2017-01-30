@@ -1,7 +1,7 @@
 Thymol Node Server
 ==================
 
-A nodejs based server-side JavaScript Thymeleaf template engine built on Thymol and Express.
+A nodejs based server-side JavaScript Thymeleaf template engine built on Thymol, Express and Domino.
 
 This is an experimental web server that processes server-side [Thymeleaf](http://www.thymeleaf.org) templates, JavaScript and data using [Thymol](http://www.thymoljs.org) and returns documents rendered as HTML.
 
@@ -63,18 +63,6 @@ Configuration
                        The value of this control defaults to "false", so "data-thymol-load" scripts are ignored by default.
      
     resetPerRequest: this is a boolean control, if set to "true", the server will reset all internal configuration on receipt of every new request. (This is used by Thymol automated integration tests). 
-
- You can also use the configuration file to "fine tune" the jQuery configuration using the jQueryConfiguration initialiser (properties of this object are set on jQuery instances).
-
-For example using:
-
-    jQueryConfiguration: {
-      support: {
-        cors: true
-      }
-    }
-
- Will set the "support.cors" property of jQuery instances to "true" (you may need to do this if you're using jQuery 1.x.x).
  
 Operation
 ---------
