@@ -1,6 +1,5 @@
 var express = require( 'express' );
 var router = express.Router();
-var fs = require( 'fs' );
 
 /* GET a template or forward request to next route. */
 router.get( '*', function( req, res, next ) {
@@ -21,7 +20,7 @@ router.get( '*', function( req, res, next ) {
       if( splits.length > 1 ) {
         query = "?" + splits[ 1 ];
       }
-      var stats = fs.statSync( tf );
+      var stats = thymol.fileSystem.statSync( tf );
       if( !!stats && stats.isFile() ) {
         var path = url.substring( 1 );
         var lio = url.lastIndexOf( "/" );
@@ -38,6 +37,7 @@ router.get( '*', function( req, res, next ) {
       }
     }
     catch( err ) {
+      var x = err.statusCode;
     }
   }
   next();
