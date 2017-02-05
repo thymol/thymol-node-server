@@ -10,7 +10,7 @@ var thymolServerConfiguration = {
     prefix : "th",
     dataPrefix : "data",
     precision : 10,
-    protocol : "file://",
+    protocol : "",
     locale : "en",
     precedence : 20000,
     messagePath : "",
