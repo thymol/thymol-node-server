@@ -4,30 +4,29 @@ var logger = require( "morgan" );
 var cookieParser = require( "cookie-parser" );
 var bodyParser = require( "body-parser" );
 
-var templates = require( "./routes/templates" );
 var thymolEngine = express();
 
 var thymolNodePath = "thymol-node";
 
-var argv = require('yargs').argv;
+var argv = require( 'yargs' ).argv;
 
 var serverConfiguration = require( "./config/server-config" );
 if( !!argv.c ) {
   serverConfiguration = require( argv.c );
 }
 
-if( argv._.length > 0) {
-  serverConfiguration.webappRoot = argv._[0];
+if( argv._.length > 0 ) {
+  serverConfiguration.webappRoot = argv._[ 0 ];
 }
-if( argv._.length > 1) {
-  serverConfiguration.templatePath = argv._[1];
+if( argv._.length > 1 ) {
+  serverConfiguration.templatePath = argv._[ 1 ];
 }
-console.log("template root is: " + serverConfiguration.webappRoot );
-console.log("template path is: " + serverConfiguration.templatePath );
-if( argv._.length > 2) {
-  if( !!argv._[2] && argv._[2].length > 0 ) {
-    thymolNodePath = argv._[2];
-    console.log("thymol-node path is: " + thymolNodePath );
+console.log( "template root is: " + serverConfiguration.webappRoot );
+console.log( "template path is: " + serverConfiguration.templatePath );
+if( argv._.length > 2 ) {
+  if( !!argv._[ 2 ] && argv._[ 2 ].length > 0 ) {
+    thymolNodePath = argv._[ 2 ];
+    console.log( "thymol-node path is: " + thymolNodePath );
   }
 }
 
@@ -43,18 +42,14 @@ thymolEngine.use( bodyParser.urlencoded( {
 } ) );
 thymolEngine.use( cookieParser() );
 
-var fs = require( "fs" );
-
-require( "./lib/XHR");
-
 thymol = {};
 
 var domino = require( "domino" );
-var Location = require('domino/lib/Location');
-thymol.thDomParse = function(markup,junk,uri) {
-  var wndw = domino.createWindow(markup);
-  if( !!uri ) {
-    var loc = new Location(wndw, "file://" + uri);
+var Location = require( 'domino/lib/Location' );
+thymol.thDomParse = function( markup, junk, options ) {
+  var wndw = domino.createWindow( markup );
+  if( !!options ) {
+    var loc = new Location( wndw, options.uri + options.query );
     wndw.location = loc;
   }
   return wndw.document;
@@ -105,6 +100,7 @@ resetGlobals = function() {
 };
 
 require( thymolNodePath );
+thymol.fileSystem = require( "fs" );
 thymol.express = express;
 thymol.engine = thymolEngine;
 thymol.require = require;
@@ -119,7 +115,7 @@ thymol.ready = function( func ) {
 resetGlobals();
 setDefaults();
 
-var doc = thymol.thDomParse("<html></html>");
+var doc = thymol.thDomParse( "<html></html>" );
 thymol.thWindow = doc.defaultView;
 
 thymol.setup( serverConfiguration.resetPerRequest );
@@ -132,18 +128,18 @@ thymol.thUseAbsolutePath = true;
 thymol.thUseFullURLPath = false;
 
 if( !!argv.w ) {
-  require( argv.w )(thymolEngine,express);
+  require( argv.w )( thymolEngine, express );
 }
 
-thymolEngine.use( templates );
-thymolEngine.use(express.static( serverConfiguration.webappRoot ));
+thymolEngine.use( require( "./routes/templates" ) );
+thymolEngine.use( express.static( serverConfiguration.webappRoot ) );
 
-thymolEngine.set( "views", [serverConfiguration.webappRoot + serverConfiguration.templatePath, __dirname + "/default" ] );
+thymolEngine.set( "views", [ serverConfiguration.webappRoot + serverConfiguration.templatePath, __dirname + "/default" ] );
 
 thymolEngine.engine( "html", function( filePath, options, callback ) { // define the template engine
-  fs.readFile( filePath, function( err, content ) {
+  thymol.fileSystem.readFile( filePath, function( err, content ) {
     if( err ) {
-      throw new Error(err);
+      throw new Error( err );
     }
     var strContent = content.toString();
     var result = thymolProcess( strContent, options );
@@ -174,8 +170,8 @@ if( thymolEngine.get( "env" ) === "development" ) {
           error : err
         } );
       }
-      catch(drnderr) {
-        debug("drnderr is:" + drnderr);
+      catch( drnderr ) {
+        debug( "drnderr is:" + drnderr );
       }
     }
   } );
@@ -192,8 +188,8 @@ thymolEngine.use( function( err, req, res, next ) {
         error : {}
       } );
     }
-    catch(rnderr) {
-      debug("rnderr is:" + rnderr);
+    catch( rnderr ) {
+      debug( "rnderr is:" + rnderr );
     }
   }
 } );
@@ -209,7 +205,7 @@ var notFavicon = function( req, res ) {
 
 var thymolProcess = function( content, options ) {
 
-  var document = thymol.thDomParse( content, null, options.uri );
+  var document = thymol.thDomParse( content, null, options );
 
   thymol.thDocument = document;
 
@@ -221,7 +217,6 @@ var thymolProcess = function( content, options ) {
   }
 
   thymol.thWindow.location.search = "?";
-  thymol.thWindow.XMLHttpRequest = XMLHttpRequest;
 
   setDefaults();
 
@@ -239,9 +234,10 @@ var thymolProcess = function( content, options ) {
     error : null
   };
 
-  var alertObject = {};
-  alertObject.alert = function( arg ) {
-    result.error = arg;
+  var alertObject = {
+    alert: function( arg ) {
+      result.error = arg;
+    }
   };
 
   thymol.thWindow.alert = alertObject.alert;
@@ -252,7 +248,7 @@ var thymolProcess = function( content, options ) {
   }
 
   if( !!options.error ) {
-    thVars = [ [ "errorMessage", (!!options.error.status ? (options.error.status + " "): "" )  + (!!options.error.name ? (options.error.name + ": "): "" ) + (!!options.error.message ? options.error.message: options.error ) ] ];
+    thVars = [ [ "errorMessage", ( !!options.error.status ? ( options.error.status + " " ) : "" ) + ( !!options.error.name ? ( options.error.name + ": " ) : "" ) + ( !!options.error.message ? options.error.message : options.error ) ] ];
   }
 
   var resultDocument = thymol.execute( thymol.thDocument );
