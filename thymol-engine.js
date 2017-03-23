@@ -72,6 +72,7 @@ setDefaults = function() {
   thymol.thDefaultLocalMessages = serverConfiguration.defaults.localMessages;
   thymol.thDefaultDisableMessages = serverConfiguration.defaults.disableMessages;
   thymol.thDefaultTemplateSuffix = serverConfiguration.defaults.templateSuffix;
+  thymol.thDefaultInlineQuote = serverConfiguration.defaults.inlineQuote;
 };
 
 resetGlobals = function() {
@@ -90,6 +91,7 @@ resetGlobals = function() {
   thLocalMessages = undefined;
   thDisableMessages = undefined;
   thTemplateSuffix = undefined;
+  thInlineQuote = undefined;
 
   thRoot = undefined;
   thPath = undefined;
@@ -123,6 +125,7 @@ thymol.setup( serverConfiguration.resetPerRequest );
 thymol.thProtocol = "";
 
 thymol.thRoot = serverConfiguration.webappRoot;
+thymol.thLocation = thymol.thRoot;
 
 thymol.thUseAbsolutePath = true;
 thymol.thUseFullURLPath = false;
